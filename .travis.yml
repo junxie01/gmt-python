@@ -61,6 +61,12 @@ matrix:
               - BUILD_DOCS=true
               - DEPLOY_DOCS=true
               - DEPLOY_PYPI=true
+        - name: "Linux - Python 3.6 - GMT master branch"
+          os: linux
+          env:
+              - PYTHON=3.6
+              - TEST=true
+              - BUILD_DOCS=true
         - name: "Mac - Python 3.7"
           os: osx
           env:
@@ -82,6 +88,12 @@ before_install:
     - source continuous-integration/travis/setup-miniconda.sh
     # Show installed pkg information for postmortem diagnostic
     - conda list
+    # install GMT master branch
+    - if [ "$TRAVIS_JOB_NAME" == "Linux - Python 3.6 - GMT master branch" ]; then
+        git clone --depth=1 https://github.com/GenericMappingTools/gmt gmt-master
+        sh gmt-master/ci/travis-setup.sh
+        sh gmt-master/ci/travis-build.sh
+      fi
 
 install:
     # Package and install
